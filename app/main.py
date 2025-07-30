@@ -14,9 +14,9 @@ import os
 
 def download_models():
     model_files = {
-        "book_data.pkl":     "166R7bs6RJTJbqJMZBJm1MHRV_yBX1eBB",
-        "embeddings.npy":    "1KLf72cTooWQGH_gGOZngDa3kqINizaiO",
-        "book_index.faiss":  "16L17SAkq_HNFnbflD3TDBd0VZMtbCucE",
+        "book_data.pkl":     "18Kvy077vd4gm981cMqhW7jyvDdylSbhL",
+        "embeddings.npy":    "1td9bNMTi0xGLq76x-2X6U7VKLglzI0dA",
+        "book_index.faiss":  "1HRxjQf9VJ657HfX2GCD2v4zpOS2EpIjS",
     }
 
     for filename, file_id in model_files.items():
@@ -39,9 +39,7 @@ model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # ----- FastAPI app -----
 app = FastAPI()
-@app.on_event("startup")
-def on_startup():
-    download_models()
+
 
 # Allow requests from frontend 
 app.add_middleware(
