@@ -14,9 +14,9 @@ import os
 
 def download_models():
     model_files = {
-        "book_data.pkl":     "1pn4kEf8_m4ZAjmnIJ-3lmdsghEUfVLbD",
-        "embeddings.npy":    "1Nx5P-uSTiMYtcFqohJ0_INbl97bRKlSf",
-        "book_index.faiss":  "1MOdpoeAOULRYovtzLXhbBBqBroBWNmBh",
+        "book_data.pkl":     "1s7liBraKr2c4n6TxzDvX-AkhhjvvQA4h",
+        "embeddings.npy":    "1HYbGgFCvdt7GCpqVs244VCDe6W2VYRhw",
+        "book_index.faiss":  "1_ZUID0emAs2laadZgmlsUBss8xDErLHd",
     }
 
     for filename, file_id in model_files.items():
