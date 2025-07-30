@@ -28,7 +28,7 @@ def download_models():
             print(f"{filename} already exists. Skipping download.")
 
 
-
+download_models()
 # ----- Load model and data -----
 with open("book_data.pkl", "rb") as f:
     df = pickle.load(f)
