@@ -5,7 +5,7 @@ import pickle
 from sentence_transformers import SentenceTransformer
 
 # Load and preprocess dataset
-df = pd.read_csv("data/dataset.csv", encoding="utf-8")
+df = pd.read_csv("data/filtered_books.csv", encoding="utf-8")
 df = df.dropna(subset=["title", "desc", "genre", "rating", "pages", "totalratings"])
 
 # Clean genre field
