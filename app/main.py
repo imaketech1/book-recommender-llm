@@ -9,17 +9,39 @@ import re
 import random
 from sentence_transformers import SentenceTransformer
 from fastapi.middleware.cors import CORSMiddleware
+import gdown
+import os
+
+def download_models():
+    model_files = {
+        "book_data.pkl":     "1pn4kEf8_m4ZAjmnIJ-3lmdsghEUfVLbD",
+        "embeddings.npy":    "1Nx5P-uSTiMYtcFqohJ0_INbl97bRKlSf",
+        "book_index.faiss":  "1MOdpoeAOULRYovtzLXhbBBqBroBWNmBh",
+    }
+
+    for filename, file_id in model_files.items():
+        if not os.path.exists(filename):
+            url = f"https://drive.google.com/uc?id={file_id}"
+            print(f"Downloading {filename}...")
+            gdown.download(url, filename, quiet=False)
+        else:
+            print(f"{filename} already exists. Skipping download.")
+
+
 
 # ----- Load model and data -----
-with open("model/book_data.pkl", "rb") as f:
+with open("book_data.pkl", "rb") as f:
     df = pickle.load(f)
 
-embeddings = np.load("model/embeddings.npy")
-index = faiss.read_index("model/book_index.faiss")
+embeddings = np.load("embeddings.npy")
+index = faiss.read_index("book_index.faiss")
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # ----- FastAPI app -----
 app = FastAPI()
+@app.on_event("startup")
+def on_startup():
+    download_models()
 
 # Allow requests from frontend 
 app.add_middleware(
