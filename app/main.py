@@ -13,8 +13,8 @@ from sentence_transformers import SentenceTransformer
 # ----- Download embeddings and index if not present -----
 def download_files():
     model_files = {
-        "embeddings.npy": "1td9bNMTi0xGLq76x-2X6U7VKLglzI0dA",
-        "book_index.faiss": "1HRxjQf9VJ657HfX2GCD2v4zpOS2EpIjS",
+        "embeddings.npy": "1C66l8N1vujIAUGyvYmVybNIYIgjn5lbe",
+        "book_index.faiss": "1-7yNnm315Va9QpI0rCAjBWHHVIKvXjpg",
     }
 
     for filename, file_id in model_files.items():
