@@ -1,22 +1,20 @@
 # main.py
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+import pandas as pd
 import numpy as np
 import faiss
-import pickle
-import re
 import random
-from sentence_transformers import SentenceTransformer
-from fastapi.middleware.cors import CORSMiddleware
-import gdown
 import os
+import gdown
+from sentence_transformers import SentenceTransformer
 
-def download_models():
+# ----- Download embeddings and index if not present -----
+def download_files():
     model_files = {
-        "book_data.pkl":     "18Kvy077vd4gm981cMqhW7jyvDdylSbhL",
-        "embeddings.npy":    "1td9bNMTi0xGLq76x-2X6U7VKLglzI0dA",
-        "book_index.faiss":  "1HRxjQf9VJ657HfX2GCD2v4zpOS2EpIjS",
+        "embeddings.npy": "1td9bNMTi0xGLq76x-2X6U7VKLglzI0dA",
+        "book_index.faiss": "1HRxjQf9VJ657HfX2GCD2v4zpOS2EpIjS",
     }
 
     for filename, file_id in model_files.items():
@@ -25,14 +23,14 @@ def download_models():
             print(f"Downloading {filename}...")
             gdown.download(url, filename, quiet=False)
         else:
-            print(f"{filename} already exists. Skipping download.")
+            print(f"{filename} already exists. Skipping.")
 
+download_files()
 
-download_models()
-# ----- Load model and data -----
-with open("book_data.pkl", "rb") as f:
-    df = pickle.load(f)
+# ----- Load metadata from CSV -----
+df = pd.read_csv("data/filtered_books.csv")
 
+# ----- Load embeddings and FAISS index -----
 embeddings = np.load("embeddings.npy")
 index = faiss.read_index("book_index.faiss")
 model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -40,11 +38,9 @@ model = SentenceTransformer("all-MiniLM-L6-v2")
 # ----- FastAPI app -----
 app = FastAPI()
 
-
-# Allow requests from frontend 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # or use frontend deployed URL
+    allow_origins=["*"],  # update if needed
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -71,6 +67,7 @@ def is_length_match(pages, excluded_terms):
         return False
     return True
 
+# ----- Main recommend endpoint -----
 @app.post("/recommend")
 def recommend_books(request: QueryRequest):
     query = request.query
@@ -79,7 +76,6 @@ def recommend_books(request: QueryRequest):
     D, I = index.search(np.array(query_embedding), k=50)
 
     matching_books = []
-
     for idx in I[0]:
         book = df.iloc[idx]
         pages = int(book["pages"]) if str(book["pages"]).isdigit() else 0
