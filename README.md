@@ -15,3 +15,8 @@ git clone git@github.com:imaketech1/book-recommender-llm.git
 cd book-recommender-llm
 pip install -r requirements.txt
 uvicorn app.main:app --reload
+```
+
+## 🔗 Frontend Repository
+
+You can find the frontend code here: [book-recommender-frontend](https://github.com/imaketech1/book-recommender-frontend)
